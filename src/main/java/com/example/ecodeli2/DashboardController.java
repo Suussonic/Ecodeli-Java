@@ -99,7 +99,8 @@ public class DashboardController {
         contentPane.getChildren().clear();
 
         Button btnPng = new Button("Exporter en PNG");
-        btnPng.setStyle("-fx-background-color: #00EC64; -fx-text-fill: white; -fx-font-weight: bold;");
+        btnPng.setStyle("-fx-background-color: #00EC64; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px; -fx-padding: 15px 30px;");
+        btnPng.setPrefWidth(200);
         btnPng.setOnAction(e -> {
             FileChooser chooser = new FileChooser();
             chooser.setTitle("Enregistrer le graphique en PNG");
@@ -119,7 +120,8 @@ public class DashboardController {
         });
 
         Button btnPdf = new Button("Exporter en PDF");
-        btnPdf.setStyle("-fx-background-color: #146EFF; -fx-text-fill: white; -fx-font-weight: bold;");
+        btnPdf.setStyle("-fx-background-color: #146EFF; -fx-text-fill: white; -fx-font-weight: bold; -fx-font-size: 16px; -fx-padding: 15px 30px;");
+        btnPdf.setPrefWidth(200);
         btnPdf.setOnAction(e -> {
             FileChooser chooser = new FileChooser();
             chooser.setTitle("Enregistrer le graphique en PDF");

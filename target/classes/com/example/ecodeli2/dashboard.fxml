@@ -5,11 +5,6 @@
 
 <StackPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.ecodeli2.DashboardController" styleClass="root">
     <VBox alignment="CENTER" spacing="40">
-        <!-- Logo ED -->
-        <HBox alignment="CENTER" spacing="0">
-            <Label text="E" styleClass="label-title"/>
-            <Label text="D" styleClass="label-green"/>
-        </HBox>
         <!-- Titre ECODELI -->
         <HBox alignment="CENTER" spacing="0">
             <Label text="ECO" styleClass="label-subtitle"/>
