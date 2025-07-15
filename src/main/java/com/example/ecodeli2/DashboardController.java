@@ -83,14 +83,6 @@ public class DashboardController {
     }
 
     @FXML
-    private void showReports() {
-        contentPane.getChildren().clear();
-        Label lbl = new Label("Section Rapports (à construire)");
-        lbl.setStyle("-fx-font-size: 18px; -fx-text-fill: #555;");
-        contentPane.getChildren().add(lbl);
-    }
-
-    @FXML
     private void showSettings() {
         contentPane.getChildren().clear();
         VBox form = new VBox(10,
