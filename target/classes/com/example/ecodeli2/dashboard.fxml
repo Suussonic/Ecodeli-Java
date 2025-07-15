@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<StackPane xmlns:fx="http://javafx.com/fxml" fx:controller="com.example.ecodeli2.DashboardController" styleClass="root">
+    <VBox alignment="CENTER" spacing="40">
+        <!-- Logo ED -->
+        <HBox alignment="CENTER" spacing="0">
+            <Label text="E" styleClass="label-title"/>
+            <Label text="D" styleClass="label-green"/>
+        </HBox>
+        <!-- Titre ECODELI -->
+        <HBox alignment="CENTER" spacing="0">
+            <Label text="ECO" styleClass="label-subtitle"/>
+            <Label text="DELI" styleClass="label-subtitle-green"/>
+        </HBox>
+        <!-- Boutons principaux -->
+        <HBox alignment="CENTER" spacing="20">
+            <Button text="Accueil" styleClass="button-main" onAction="#showHome"/>
+            <Button text="Ventes" styleClass="button-secondary" onAction="#showSales"/>
+            <Button text="Rapports" styleClass="button-main" onAction="#showReports"/>
+            <Button text="Export" styleClass="button-secondary" onAction="#exportData"/>
+            <Button text="Paramètres" styleClass="button-secondary" onAction="#showSettings"/>
+        </HBox>
+        <!-- Zone de contenu dynamique -->
+        <StackPane fx:id="contentPane" minHeight="300" maxWidth="600" styleClass="pane-card"/>
+    </VBox>
+</StackPane>

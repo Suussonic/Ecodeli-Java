@@ -1,0 +1,53 @@
+.root {
+    -fx-background-color: #232A2A;
+    -fx-font-family: 'Montserrat', 'Arial Black', Arial, sans-serif;
+}
+
+.label-title {
+    -fx-font-size: 72px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+    -fx-effect: dropshadow(gaussian, #00EC64, 0, 0, 2, 2);
+}
+
+.label-green {
+    -fx-font-size: 72px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #00EC64;
+}
+
+.label-subtitle {
+    -fx-font-size: 36px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.label-subtitle-green {
+    -fx-font-size: 36px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #00EC64;
+}
+
+.button-main {
+    -fx-background-color: #00EC64;
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-padding: 10 30 10 30;
+}
+
+.button-secondary {
+    -fx-background-color: #146EFF;
+    -fx-text-fill: white;
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-background-radius: 8;
+    -fx-padding: 10 30 10 30;
+}
+
+.pane-card {
+    -fx-background-color: #333333;
+    -fx-background-radius: 12;
+    -fx-padding: 20;
+}

@@ -1,0 +1,177 @@
+package com.example.ecodeli2;
+
+import javafx.fxml.FXML;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.PieChart;
+import javafx.scene.control.Label;
+import javafx.scene.control.Tooltip;
+import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
+import javafx.geometry.Insets;
+import javafx.scene.image.WritableImage;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
+
+import javax.imageio.ImageIO;
+
+import com.lowagie.text.Document;
+import com.lowagie.text.Image;
+import com.lowagie.text.PageSize;
+import com.lowagie.text.pdf.PdfWriter;
+
+import javafx.embed.swing.SwingFXUtils;
+import javafx.scene.Scene;
+import javafx.scene.Node;
+import javafx.scene.layout.Region;
+
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.Map;
+
+public class DashboardController {
+
+    @FXML
+    private StackPane contentPane;
+
+    @FXML
+    public void initialize() {
+        showHome();
+    }
+
+    @FXML
+    private void showHome() {
+        contentPane.getChildren().clear();
+
+        Map<String, Double> dist = DashboardData.getYearlyRevenueByCategory(2025);
+        double total = dist.values().stream().mapToDouble(Double::doubleValue).sum();
+
+        PieChart pie = new PieChart();
+        pie.setTitle("Global Revenue 2025");
+
+        dist.forEach((category, value) -> {
+            PieChart.Data slice = new PieChart.Data(category, value);
+            pie.getData().add(slice);
+            double pct = (value / total) * 100;
+            String text = String.format("%s: %.1f%%", category, pct);
+            slice.getNode().setOnMouseEntered(e -> Tooltip.install(slice.getNode(), new Tooltip(text)));
+        });
+
+        contentPane.getChildren().add(pie);
+    }
+
+    @FXML
+    private void showSales() {
+        contentPane.getChildren().clear();
+        LineChart<String, Number> chart = ChartsBuilder.buildSalesChartAllYears();
+        contentPane.getChildren().add(chart);
+    }
+
+    @FXML
+    private void showReports() {
+        contentPane.getChildren().clear();
+        Label lbl = new Label("Section Rapports (à construire)");
+        lbl.setStyle("-fx-font-size: 18px; -fx-text-fill: #555;");
+        contentPane.getChildren().add(lbl);
+    }
+
+    @FXML
+    private void showSettings() {
+        contentPane.getChildren().clear();
+        VBox form = new VBox(10,
+                new Label("Paramètres"),
+                new CheckBox("Activer notifications"),
+                new Button("Enregistrer")
+        );
+        form.setPadding(new Insets(20));
+        contentPane.getChildren().add(form);
+    }
+
+    @FXML
+    private void exportData() {
+        contentPane.getChildren().clear();
+
+        Button btnPng = new Button("Exporter en PNG");
+        btnPng.setStyle("-fx-background-color: #00EC64; -fx-text-fill: white; -fx-font-weight: bold;");
+        btnPng.setOnAction(e -> {
+            FileChooser chooser = new FileChooser();
+            chooser.setTitle("Enregistrer le graphique en PNG");
+            chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Image PNG", "*.png"));
+            File file = chooser.showSaveDialog(contentPane.getScene().getWindow());
+            if (file != null) {
+                try {
+                    LineChart<String, Number> chart = ChartsBuilder.buildSalesChartAllYears();
+                    WritableImage image = snapshotNode(chart, 1600, 900);
+                    BufferedImage buffered = SwingFXUtils.fromFXImage(image, null);
+                    ImageIO.write(buffered, "png", file);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        Button btnPdf = new Button("Exporter en PDF");
+        btnPdf.setStyle("-fx-background-color: #146EFF; -fx-text-fill: white; -fx-font-weight: bold;");
+        btnPdf.setOnAction(e -> {
+            FileChooser chooser = new FileChooser();
+            chooser.setTitle("Enregistrer le graphique en PDF");
+            chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("Document PDF", "*.pdf"));
+            File file = chooser.showSaveDialog(contentPane.getScene().getWindow());
+            if (file != null) {
+                try {
+                    Document document = new Document(PageSize.A4, 36, 36, 36, 36);
+                    PdfWriter.getInstance(document, new FileOutputStream(file));
+                    document.open();
+
+                    LineChart<String, Number> chart1 = ChartsBuilder.buildSalesChartAllYears();
+                    WritableImage img1 = snapshotNode(chart1, 1200, 800);
+                    File tempFile1 = new File("temp_chart1.png");
+                    ImageIO.write(SwingFXUtils.fromFXImage(img1, null), "png", tempFile1);
+
+                    PieChart chart2 = new PieChart();
+                    chart2.setTitle("Global Revenue 2025");
+                    Map<String, Double> dist = DashboardData.getYearlyRevenueByCategory(2025);
+                    dist.forEach((category, value) -> chart2.getData().add(new PieChart.Data(category, value)));
+                    WritableImage img2 = snapshotNode(chart2, 1000, 800);
+                    File tempFile2 = new File("temp_chart2.png");
+                    ImageIO.write(SwingFXUtils.fromFXImage(img2, null), "png", tempFile2);
+
+                    Image pdfImg1 = Image.getInstance(tempFile1.getAbsolutePath());
+                    pdfImg1.scaleToFit(PageSize.A4.getWidth() - 72, PageSize.A4.getHeight() / 2 - 50);
+                    document.add(pdfImg1);
+
+                    document.add(new com.lowagie.text.Paragraph("\n"));
+
+                    Image pdfImg2 = Image.getInstance(tempFile2.getAbsolutePath());
+                    pdfImg2.scaleToFit(PageSize.A4.getWidth() - 72, PageSize.A4.getHeight() / 2 - 50);
+                    document.add(pdfImg2);
+
+                    document.close();
+
+                    tempFile1.delete();
+                    tempFile2.delete();
+
+                } catch (Exception ex) {
+                    ex.printStackTrace();
+                }
+            }
+        });
+
+        VBox box = new VBox(20, new Label("Exporter le graphique :"), new VBox(10, btnPng, btnPdf));
+        box.setPadding(new Insets(20));
+        contentPane.getChildren().add(box);
+    }
+
+    private WritableImage snapshotNode(Node node, double width, double height) {
+        if (node instanceof Region) {
+            ((Region) node).setPrefSize(width, height);
+        }
+        StackPane root = new StackPane(node);
+        Scene scene = new Scene(root);
+        root.applyCss();
+        root.layout();
+        WritableImage image = new WritableImage((int) width, (int) height);
+        return node.snapshot(null, image);
+    }
+}
