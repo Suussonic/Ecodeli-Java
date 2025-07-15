@@ -83,18 +83,6 @@ public class DashboardController {
     }
 
     @FXML
-    private void showSettings() {
-        contentPane.getChildren().clear();
-        VBox form = new VBox(10,
-                new Label("Paramètres"),
-                new CheckBox("Activer notifications"),
-                new Button("Enregistrer")
-        );
-        form.setPadding(new Insets(20));
-        contentPane.getChildren().add(form);
-    }
-
-    @FXML
     private void exportData() {
         contentPane.getChildren().clear();
 

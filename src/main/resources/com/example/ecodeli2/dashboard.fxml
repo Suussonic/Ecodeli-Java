@@ -15,7 +15,6 @@
             <Button text="Rôles" styleClass="button-main" onAction="#showHome"/>
             <Button text="Ventes" styleClass="button-secondary" onAction="#showSales"/>
             <Button text="Export" styleClass="button-secondary" onAction="#exportData"/>
-            <Button text="Paramètres" styleClass="button-secondary" onAction="#showSettings"/>
         </HBox>
         <!-- Zone de contenu dynamique -->
         <StackPane fx:id="contentPane" minHeight="300" maxWidth="600" styleClass="pane-card"/>
