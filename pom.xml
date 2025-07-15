@@ -122,6 +122,16 @@
                             <noManPages>true</noManPages>
                             <stripDebug>true</stripDebug>
                             <noHeaderFiles>true</noHeaderFiles>
+                            <jvmArgs>
+                                <jvmArg>--enable-native-access=javafx.graphics</jvmArg>
+                                <jvmArg>--add-opens=java.base/sun.misc=ALL-UNNAMED</jvmArg>
+                                <jvmArg>--add-opens=java.base/java.lang=ALL-UNNAMED</jvmArg>
+                                <jvmArg>--add-opens=java.desktop/sun.awt=ALL-UNNAMED</jvmArg>
+                                <jvmArg>--add-opens=javafx.graphics/com.sun.glass.utils=ALL-UNNAMED</jvmArg>
+                                <jvmArg>--add-opens=javafx.graphics/com.sun.marlin=ALL-UNNAMED</jvmArg>
+                                <jvmArg>--add-exports=javafx.graphics/com.sun.glass.utils=ALL-UNNAMED</jvmArg>
+                                <jvmArg>--add-exports=javafx.graphics/com.sun.marlin=ALL-UNNAMED</jvmArg>
+                            </jvmArgs>
                         </configuration>
                     </execution>
                 </executions>
