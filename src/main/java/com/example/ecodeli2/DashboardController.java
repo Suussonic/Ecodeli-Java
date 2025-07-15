@@ -44,18 +44,32 @@ public class DashboardController {
     private void showHome() {
         contentPane.getChildren().clear();
 
-        Map<String, Double> dist = DashboardData.getYearlyRevenueByCategory(2025);
-        double total = dist.values().stream().mapToDouble(Double::doubleValue).sum();
+        Map<String, Integer> roleDistribution = UserData.getUserRoleDistribution();
+        int total = roleDistribution.values().stream().mapToInt(Integer::intValue).sum();
+
+        if (total == 0) {
+            Label noDataLabel = new Label("Aucune donnée utilisateur disponible");
+            noDataLabel.setStyle("-fx-font-size: 16px; -fx-text-fill: #666;");
+            contentPane.getChildren().add(noDataLabel);
+            return;
+        }
 
         PieChart pie = new PieChart();
-        pie.setTitle("Global Revenue 2025");
+        pie.setTitle("Distribution des rôles utilisateurs");
 
-        dist.forEach((category, value) -> {
-            PieChart.Data slice = new PieChart.Data(category, value);
+        roleDistribution.forEach((roleName, count) -> {
+            PieChart.Data slice = new PieChart.Data(roleName, count);
             pie.getData().add(slice);
-            double pct = (value / total) * 100;
-            String text = String.format("%s: %.1f%%", category, pct);
-            slice.getNode().setOnMouseEntered(e -> Tooltip.install(slice.getNode(), new Tooltip(text)));
+            
+            double percentage = (count.doubleValue() / total) * 100;
+            String tooltipText = String.format("%s: %d utilisateurs (%.1f%%)", roleName, count, percentage);
+            
+            // Ajout du tooltip après que le node soit créé
+            slice.nodeProperty().addListener((observable, oldValue, newValue) -> {
+                if (newValue != null) {
+                    Tooltip.install(newValue, new Tooltip(tooltipText));
+                }
+            });
         });
 
         contentPane.getChildren().add(pie);
@@ -101,8 +115,9 @@ public class DashboardController {
             File file = chooser.showSaveDialog(contentPane.getScene().getWindow());
             if (file != null) {
                 try {
-                    LineChart<String, Number> chart = ChartsBuilder.buildSalesChartAllYears();
-                    WritableImage image = snapshotNode(chart, 1600, 900);
+                    // Créer le graphique des rôles utilisateurs
+                    PieChart userRoleChart = createUserRolePieChartForExport();
+                    WritableImage image = snapshotNode(userRoleChart, 1600, 900);
                     BufferedImage buffered = SwingFXUtils.fromFXImage(image, null);
                     ImageIO.write(buffered, "png", file);
                 } catch (Exception ex) {
@@ -129,10 +144,8 @@ public class DashboardController {
                     File tempFile1 = new File("temp_chart1.png");
                     ImageIO.write(SwingFXUtils.fromFXImage(img1, null), "png", tempFile1);
 
-                    PieChart chart2 = new PieChart();
-                    chart2.setTitle("Global Revenue 2025");
-                    Map<String, Double> dist = DashboardData.getYearlyRevenueByCategory(2025);
-                    dist.forEach((category, value) -> chart2.getData().add(new PieChart.Data(category, value)));
+                    // Graphique des rôles utilisateurs
+                    PieChart chart2 = createUserRolePieChartForExport();
                     WritableImage img2 = snapshotNode(chart2, 1000, 800);
                     File tempFile2 = new File("temp_chart2.png");
                     ImageIO.write(SwingFXUtils.fromFXImage(img2, null), "png", tempFile2);
@@ -173,5 +186,18 @@ public class DashboardController {
         root.layout();
         WritableImage image = new WritableImage((int) width, (int) height);
         return node.snapshot(null, image);
+    }
+
+    private PieChart createUserRolePieChartForExport() {
+        PieChart pie = new PieChart();
+        pie.setTitle("Distribution des rôles utilisateurs");
+        
+        Map<String, Integer> roleDistribution = UserData.getUserRoleDistribution();
+        roleDistribution.forEach((roleName, count) -> {
+            PieChart.Data slice = new PieChart.Data(roleName, count);
+            pie.getData().add(slice);
+        });
+        
+        return pie;
     }
 }

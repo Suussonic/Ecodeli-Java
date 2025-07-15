@@ -4,6 +4,7 @@ module com.example.ecodeli2 {
     requires javafx.web;
     requires javafx.swing;
     requires java.desktop;
+    requires java.net.http;
 
     requires org.controlsfx.controls;
     requires net.synedra.validatorfx;
